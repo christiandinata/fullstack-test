@@ -1,34 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Pixel8Labs Product Developer Take-home Test
 
-## Getting Started
+Thanks for your interest in working with us as a product developer.
+This take-home test is for us to gauge your engineering capabilities and determine whether we can move to the work trial phase. It's not a test per se but rather a way for Pixel8Labs to know more about your abilities and also for you to see if you would like the kind of work we do, before we spend more time together in the work trial.
 
-First, run the development server:
+This test should not take you more than a few hours but you are allowed to spend more within the given 3 days just in case you want to touch things up and submit a polished piece of work.
 
-```bash
-pnpm dev
-# or
-yarn dev
-```
+## Tasks
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Here are the requirements for the take-home project
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Basic tasks
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Implement and deploy (to the platform provider of your choice) an application that
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- [ ] Show profile of a github user / organization with:
+  - [ ] Profile picture
+  - [ ] Full name
+  - [ ] Email if it's available
+  - [ ] Numbers of followers and following
+- [ ] Show the first 6 (or less if there're less repositories from such user) repositories of such user
+- [ ] The default home page will redirect to `/octocat`
+- [ ] Users can login using their github account using Oauth
+- [ ] Show details about profile views:
+  - [ ] The total number of views a profile have gotten (regardless whether the view was from an authenticated user or not)
+  - [ ] The last 3 people who view a particular profile (link to those profiles on the same app as well)
 
-## Learn More
+The frontend design for this app can be found in [this Figma file](https://www.figma.com/file/fLiLQfjSF6X7pEfHli2Lwh/Fullstack-Engineer-Test-Case?type=design&node-id=0%3A1&mode=design&t=RfULQB2MF956TxTT-1)
 
-To learn more about Next.js, take a look at the following resources:
+**Notes**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Go usage is optional, you can create your own backend implementation in the backend folder.
+- Frontend must be using React and the existing setup that we have in the [frontend](./frontend/) folder.
+- Tailwind usage is optional, please feel free to use any CSS libraries / frameworks.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Stretch (optional) tasks
 
-## Deploy on Vercel
+These tasks are optional but we would encourage you to give them a try to demonstrate more of your skills
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [ ] Setup Github Actions workflow file for lint check on PRs to `master`
+- [ ] Setup Github Actions workflow file to deploy on pushes to `master`
+- [ ] Deploy the website and submit the URL to us
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Tips
+
+- Github APIs that you might need to checkout:
+  - [Github OAuth](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
+  - [API to get an user profile](https://docs.github.com/en/free-pro-team@latest/rest/users/users?apiVersion=2022-11-28#get-a-user)
+  - [API to get repos of an user](https://docs.github.com/en/free-pro-team@latest/rest/repos/repos?apiVersion=2022-11-28#list-repositories-for-a-user)
+- Remember to document your technical decisions and considerations as we're considering your thought process as much as the absolute development results.
+- Last but not least, remember to **have fun**!!
