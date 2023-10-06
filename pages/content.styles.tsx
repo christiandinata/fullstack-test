@@ -14,7 +14,6 @@ export const Content = styled.div`
       flex-direction: column;
       align-items: center;
     }
-
 `
 
 export const ProfileDesc = styled.div`
@@ -162,6 +161,10 @@ export const AvatarGroup = styled.div`
   align-items: start;
   gap: 8px;
 `
+
+export const imageStyle = {
+  borderRadius: '50%'
+}
 
 export const Repos = styled.div`
   display: flex;

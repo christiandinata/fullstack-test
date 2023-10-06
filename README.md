@@ -21,9 +21,9 @@ Implement and deploy (to the platform provider of your choice) an application th
 - [v] Show the first 6 (or less if there're less repositories from such user) repositories of such user
 - [v] The default home page will redirect to `/octocat`
 - [v] Users can login using their github account using Oauth
-- [ ] Show details about profile views:
-  - [ ] The total number of views a profile have gotten (regardless whether the view was from an authenticated user or not)
-  - [ ] The last 3 people who view a particular profile (link to those profiles on the same app as well)
+- [v] Show details about profile views:
+  - [v] The total number of views a profile have gotten (regardless whether the view was from an authenticated user or not)
+  - [v] The last 3 people who view a particular profile (link to those profiles on the same app as well)
 
 The frontend design for this app can be found in [this Figma file](https://www.figma.com/file/fLiLQfjSF6X7pEfHli2Lwh/Fullstack-Engineer-Test-Case?type=design&node-id=0%3A1&mode=design&t=RfULQB2MF956TxTT-1)
 

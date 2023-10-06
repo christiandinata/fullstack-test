@@ -3,12 +3,13 @@ import { useRouter } from 'next/router'
 import {useSession, signIn, signOut} from 'next-auth/react'
 import Image from 'next/image';
 import { Header, HeaderContainer, Left, StyledLoggedInMenu, LoginButton, Menu, Text, MenuProps, DropdownMenu, DropdownHeader, AvatarLabelGroup, LabelGroup, LabelName, LabelEmail, DropdownItems, DropdownItem, Divider, NavMenu, XIcon, DropdownMenu2, NotLoggedInContainer, LoginButton2 } from './header.styles';
-import { About, AboutDesc, AboutEmail, Heading, AboutInfo, AboutText, AboutVisitorCount, Content, Desc, SectionTitle, Profile, ProfileDesc, Repos, Username, Visitors, AvatarGroup, VisitorSection, RepoHeader, Badge, RepoCards, InnerDesc, AboutFollows, Followers, FollowDot, FollowText } from './content.styles';
+import { About, AboutDesc, AboutEmail, Heading, AboutInfo, AboutText, AboutVisitorCount, Content, Desc, SectionTitle, Profile, ProfileDesc, Repos, Username, Visitors, AvatarGroup, VisitorSection, RepoHeader, Badge, RepoCards, InnerDesc, AboutFollows, Followers, FollowText, imageStyle } from './content.styles';
 import RepoCard from '@/components/RepoCard';
 import { Footer, FooterContainer, FooterContent } from './footer.styles';
 import {  useEffect, useState } from 'react';
 import axios from 'axios';
-import colors from './github.lang.color.json'
+import colors from '../github.lang.color.json'
+import Link from 'next/link';
 
 interface User{
   avatar_url: string;
@@ -26,6 +27,15 @@ interface Repo{
   description: string;
   language: string;
   updated_at: string;
+  watchers: number;
+}
+
+interface LatestVisitor {
+  actor: {
+    id: string;
+    login: string;
+    avatar_url: string;
+  }
 }
 
 interface Colors {
@@ -36,12 +46,18 @@ const colore: Colors = colors;
 
 const HomePage: NextPage = () => {
   const router = useRouter();
+  const username = router?.query?.username;
   const {data: session} = useSession();
+
   const [menuClicked, setMenuClicked] = useState(false);
   const [user, setUser] = useState({} as User)
-  const [repos, setRepos] = useState<Repo[]>([])
-  const username = router?.query?.username;
 
+  const [repos, setRepos] = useState<Repo[]>([])
+  let totalVisitor = 0;
+
+  const [latestVisitor, setLatestVisitor] = useState<LatestVisitor[]>([])
+  console.log(session)
+  // get user
   useEffect(() => {
     if (!username) return;
     axios.get(`https://api.github.com/users/${username}`, {
@@ -71,20 +87,22 @@ const HomePage: NextPage = () => {
     }).catch(err => console.log(err))
   }, [username])
 
-  // get the authenticated user
-  // useEffect(() => {
-  //   axios.get(`https://api.github.com/user`, {
-  //     headers: {
-  //       'Authorization' : 'Bearer ' + process.env.AUTH_TOKEN,
-  //       'X-GitHub-Api-Version': '2022-11-28',
-  //     }
-  //   })
-  //   .then(res => {
-  //     if (res.status === 200){
-  //       setUser(res.data)
-  //     }
-  //   }).catch(err => console.log(err))
-  // }, [session])
+  // get latest visitors
+  useEffect(() => {
+    if (!username) return;
+    axios.get(`https://api.github.com/users/${username}/received_events`, {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      }
+    })
+    .then(res => {
+      if (res.status === 200){
+        setLatestVisitor(res?.data?.slice(0,3))
+      }
+    }).catch(err => console.log(err))
+  }, [username])
+
+  console.log(latestVisitor)
 
   function timeAgo(date: string){
     const newDate = new Date(date);
@@ -114,7 +132,7 @@ const HomePage: NextPage = () => {
 
   const formattedRepos = repos.map(repo => {
     const updatedAt = timeAgo(repo.updated_at);
-    
+    totalVisitor += repo.watchers;
     return {
       ...repo, 
       updated_at: updatedAt
@@ -136,7 +154,7 @@ const HomePage: NextPage = () => {
   const LoggedInMenu = ({ menuClicked }: MenuProps) => (
     <>
       <StyledLoggedInMenu menuClicked={menuClicked} onClick={handleClick}>
-        <Image src={session?.user?.image!} alt="loggedIn-avatar" width="40" height="40"/>
+        <Image src={session?.user?.image!} alt="loggedIn-avatar" width="40" height="40" style={imageStyle}/>
         <Menu>
           <Image src="/menu.png" alt="menu" width="18" height="12" />
         </Menu>
@@ -145,7 +163,7 @@ const HomePage: NextPage = () => {
           <DropdownMenu>
             <DropdownHeader>
               <AvatarLabelGroup>
-                <Image src={session?.user?.image!} alt='loggedIn_avatar' width="40" height="40"/>
+                <Image src={session?.user?.image!} alt='loggedIn_avatar' width="40" height="40" style={imageStyle}/>
                 <LabelGroup>
                   <LabelName>
                     {session?.user?.name}
@@ -173,13 +191,13 @@ const HomePage: NextPage = () => {
         <DropdownMenu2>
           <DropdownHeader>
             <AvatarLabelGroup>
-              <Image src="/loggedIn_avatar.png" alt='loggedIn_avatar' width="40" height="40"/>
+              <Image src={session?.user?.image!} alt='loggedIn_avatar' width="40" height="40" style={imageStyle}/>
               <LabelGroup>
                 <LabelName>
-                  Rice Rice
+                  {session?.user?.name}
                 </LabelName>
                 <LabelEmail>
-                  rys@pixel8Labs.com
+                  {session?.user?.email}
                 </LabelEmail>
               </LabelGroup>
             </AvatarLabelGroup>
@@ -256,7 +274,7 @@ const HomePage: NextPage = () => {
         <ProfileDesc>
           <Profile>
             <Desc>
-              <Image src={user?.avatar_url} alt="profile_picture" width="160" height="160"/>
+              <Image src={user?.avatar_url} alt="profile_picture" width="160" height="160" style={imageStyle}/>
               <InnerDesc>
                 <SectionTitle>
                   {user?.name}
@@ -290,8 +308,8 @@ const HomePage: NextPage = () => {
                     </AboutEmail>
                   }
                   <AboutVisitorCount>
-                    <Image src="/people.png" alt="people" width="20" height="20" unoptimized/>
-                    <AboutText><b>821.320</b> profile visitor</AboutText> 
+                    <Image src="/people.png" alt="people" width="20" height="20"/>
+                    <AboutText><b>{totalVisitor}</b> profile visitor</AboutText> 
                   </AboutVisitorCount>
                 </AboutInfo>
               </AboutDesc>
@@ -303,9 +321,13 @@ const HomePage: NextPage = () => {
                 Latest Visitor
               </Heading>
               <AvatarGroup>
-                <Image src="/Avatar1.png" alt="people" width="56" height="56"/>
-                <Image src="/Avatar2.png" alt="people" width="56" height="56"/>
-                <Image src="/Avatar3.png" alt="people" width="56" height="56"/>
+                {latestVisitor?.map(visitor => {
+                  return (
+                    <Link key={visitor?.actor?.id} href={`/${visitor?.actor?.login}`}>
+                      <Image src={visitor?.actor?.avatar_url} alt="people" width="56" height="56" style={imageStyle}/>
+                    </Link>
+                  )
+                })}
               </AvatarGroup>
             </Visitors>
           </VisitorSection>
