@@ -56,7 +56,8 @@ const HomePage: NextPage = () => {
   let totalVisitor = 0;
 
   const [latestVisitor, setLatestVisitor] = useState<LatestVisitor[]>([])
-  console.log(session)
+  // console.log(session)
+
   // get user
   useEffect(() => {
     if (!username) return;
@@ -176,7 +177,7 @@ const HomePage: NextPage = () => {
             </DropdownHeader>
             <DropdownItems>
               <DropdownItem>
-                View profile
+                View profilee
               </DropdownItem>
               <Divider />
               <DropdownItem onClick={handleLogout}>
