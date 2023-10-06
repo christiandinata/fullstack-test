@@ -177,7 +177,7 @@ const HomePage: NextPage = () => {
             </DropdownHeader>
             <DropdownItems>
               <DropdownItem>
-                View profilee
+                View profile
               </DropdownItem>
               <Divider />
               <DropdownItem onClick={handleLogout}>
