@@ -18,3 +18,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FULLSTACK_TEST_9B35A }}'
           channelId: live
           projectId: fullstack-test-9b35a
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
