@@ -10,4 +10,4 @@ jobs:
   lint_on_PRs:
     runs-on: ubuntu-latest
     steps:
-      - run: npm ci && npm run lint
+      - run: npm i && npm run lint
