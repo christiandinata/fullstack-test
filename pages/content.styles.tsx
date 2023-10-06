@@ -105,6 +105,33 @@ export const AboutInfo = styled.div`
   gap: 8px;
   align-items: start;
 `
+
+export const AboutFollows = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+`
+export const FollowDot = styled.div`
+  width: 4px;
+  height: 4px;
+  margin: 0 2px;
+  border-radius: 50%;
+  background-color: #000;
+`
+
+export const Followers = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items: start;
+`
+
+export const FollowText = styled.div`
+  display: flex;
+  gap: 4px;
+`
+
 export const AboutEmail = styled.div`
   display: flex;
   gap: 8px;

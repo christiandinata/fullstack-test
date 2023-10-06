@@ -29,10 +29,12 @@ const RepoCard = ({repoName, repoType, repoDesc, repoDotColor, repoLang, repoSta
         <BioDesc>{repoDesc}</BioDesc>
       </Bio>
       <RepoAdditional>
-        <RepoLangInfo>
-          <RepoDot backgroundColor={repoDotColor}/>
-          <RepoLang>{repoLang}</RepoLang>
-        </RepoLangInfo>
+        {repoLang && 
+          <RepoLangInfo>
+            <RepoDot backgroundColor={repoDotColor}/>
+            <RepoLang>{repoLang}</RepoLang>
+          </RepoLangInfo>
+        }
         <RepoStatus>{repoStatus}</RepoStatus>
       </RepoAdditional>
     </Card>

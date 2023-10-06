@@ -11,9 +11,12 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@octokit/core": "^5.0.1",
     "@react-hook/media-query": "^1.1.1",
+    "axios": "^1.5.1",
     "ethers": "^5.7.2",
     "next": "13.0.6",
+    "next-auth": "^4.23.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
