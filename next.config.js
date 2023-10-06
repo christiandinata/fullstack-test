@@ -21,4 +21,14 @@ module.exports = {
     GITHUB_SECRET: process.env.GITHUB_SECRETS,
     AUTH_TOKEN: process.env.AUTH_TOKEN,
   },
+
+  async redirects() {
+    return [
+      {
+        source: '/', // automatically handles all locales
+        destination: '/octocat', // automatically passes the locale on
+        permanent: false,
+      },
+    ];
+  },
 };
