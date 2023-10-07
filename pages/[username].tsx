@@ -46,7 +46,7 @@ const colore: Colors = colors;
 const HomePage: NextPage = () => {
   const router = useRouter();
   const username = router?.query?.username;
-  const {data: session, status} = useSession();
+  const {data: session} = useSession();
 
   const [menuClicked, setMenuClicked] = useState(false);
   const [user, setUser] = useState({} as User)
@@ -88,14 +88,6 @@ const HomePage: NextPage = () => {
       console.error(error);
     });
 
-    // cek user yang visit udah login atau belum
-    // user yang divisit sama atau tidak dengan yang login
-    // kalau belum login: skip
-    // kalau sama: skip
-    // perlu link dan didapat dari username yang sedang login
-    // simpan username orang yang visit di database
-    // lastVisitors dalam array berisi orang-orang yang visit profil dan sudah login
-
   }, [username])
 
   // get 3 latest visitors
@@ -123,9 +115,7 @@ const HomePage: NextPage = () => {
               });
               return {login: visitor, avatar_url: res?.data?.avatar_url};
             })
-            // console.log(arr)
             Promise.all(arr).then(results => {
-              // results is the mapped array
               setLatestVisitor(results);
             });
           } else {
@@ -157,9 +147,7 @@ const HomePage: NextPage = () => {
             });
             return {login: visitor, avatar_url: res?.data?.avatar_url};
           })
-          // console.log(arr)
           Promise.all(arr).then(results => {
-            // results is the mapped array
             setLatestVisitor(results);
           });
         } else {
@@ -185,21 +173,6 @@ const HomePage: NextPage = () => {
       }
     }).catch(err => console.log(err))
   }, [username])
-
-  // // get latest visitors
-  // useEffect(() => {
-  //   if (!username) return;
-  //   axios.get(`https://api.github.com/users/${username}/received_events`, {
-  //     headers: {
-  //       'X-GitHub-Api-Version': '2022-11-28',
-  //     }
-  //   })
-  //   .then(res => {
-  //     if (res.status === 200){
-  //       setLatestVisitor(res?.data?.slice(0,3))
-  //     }
-  //   }).catch(err => console.log(err))
-  // }, [username])
 
   function timeAgo(date: string){
     const newDate = new Date(date);
@@ -394,7 +367,6 @@ const HomePage: NextPage = () => {
                     <Image src="/following.png" alt="followers" width={20} height={20} unoptimized/>
                     <Followers>
                       <FollowText><b>{user?.followers}</b> followers</FollowText>
-                      {/* <FollowDot />  */}
                       <FollowText><b>{user?.following}</b> following</FollowText>
                     </Followers>
                   </AboutFollows>

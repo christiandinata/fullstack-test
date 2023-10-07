@@ -10,7 +10,6 @@ export const Header = styled.div`
   height: 80px;
   justify-content: center;
   align-items: center;
-  /* padding: 0 32px 0 32px; */
   position: fixed;
   top: 0;
   left: 0;
@@ -146,7 +145,6 @@ export const DropdownMenu = styled.div`
   display: flex;
   color: #000;
   flex-direction: column;
-  /* margin-right: 72px; */
   right: 8px;
   transform: translateY(70%);
   position: absolute;
@@ -154,7 +152,6 @@ export const DropdownMenu = styled.div`
   border-radius: 8px;
   background-color: #fff;
   border: 1px solid #f2f4f7;
-  /* z-index: 10; */
 
   @media (max-width: 480px){
     display: none;
@@ -165,7 +162,6 @@ export const DropdownMenu2 = styled.div`
   display: none;
   color: #000;
   flex-direction: column;
-  /* margin-right: 72px; */
   transform: translateY(0);
   right: 0;
   height: 100vh;
@@ -176,7 +172,6 @@ export const DropdownMenu2 = styled.div`
   border-radius: 8px;
   background-color: #fff;
   border: 1px solid #f2f4f7;
-  /* z-index: 10; */
 
   @media (max-width: 480px){
     display: flex;
