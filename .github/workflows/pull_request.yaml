@@ -1,13 +1,23 @@
-name: Vercel Production Deployment
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+name: Vercel Production Deployment - Lint
 on:
   pull_request:
     branches:
       - master
-jobs:
-  lint_on_PRs:
-    runs-on: ubuntu-latest
-    steps:
-      - run: npm i && npm run lint
+jobs: # list of things to do
+  linting:
+    name: Linting # job name (unique id)
+    runs-on: ubuntu-latest # on which machine to run
+    steps: # list of steps
+      - name: Install NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.18.0
+
+      - name: Code Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Code Linting
+        run: npm run lint
