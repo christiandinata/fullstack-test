@@ -29,7 +29,6 @@ interface Repo{
   description: string;
   language: string;
   updated_at: string;
-  watchers: number;
 }
 
 interface Colors {
@@ -52,7 +51,6 @@ const HomePage: NextPage = () => {
   const [user, setUser] = useState({} as User)
 
   const [repos, setRepos] = useState<Repo[]>([])
-  let totalVisitor = 0;
   const [totalViews, setTotalViews] = useState(0);
 
   const [latestVisitor, setLatestVisitor] = useState<LatestVisitor[]>([])
@@ -202,7 +200,6 @@ const HomePage: NextPage = () => {
 
   const formattedRepos = repos.map(repo => {
     const updatedAt = timeAgo(repo.updated_at);
-    totalVisitor += repo.watchers;
     return {
       ...repo, 
       updated_at: updatedAt
