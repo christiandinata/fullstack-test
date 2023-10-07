@@ -9,7 +9,7 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }: any) {
+    async signIn({ profile }: any) {
       return profile
     },
     async jwt({ token, account, profile }:any) {
