@@ -10,6 +10,8 @@ import {  useEffect, useState } from 'react';
 import axios from 'axios';
 import colors from '../github.lang.color.json'
 import Link from 'next/link';
+import { child, get, ref, set } from "firebase/database";
+import { database } from 'firebase.config';
 
 interface User{
   avatar_url: string;
@@ -30,16 +32,13 @@ interface Repo{
   watchers: number;
 }
 
-interface LatestVisitor {
-  actor: {
-    id: string;
-    login: string;
-    avatar_url: string;
-  }
-}
-
 interface Colors {
   [key: string]: string;
+}
+
+interface LatestVisitor {
+  login: string;
+  avatar_url: string;
 }
 
 const colore: Colors = colors;
@@ -47,16 +46,16 @@ const colore: Colors = colors;
 const HomePage: NextPage = () => {
   const router = useRouter();
   const username = router?.query?.username;
-  const {data: session} = useSession();
+  const {data: session, status} = useSession();
 
   const [menuClicked, setMenuClicked] = useState(false);
   const [user, setUser] = useState({} as User)
 
   const [repos, setRepos] = useState<Repo[]>([])
   let totalVisitor = 0;
+  const [totalViews, setTotalViews] = useState(0);
 
   const [latestVisitor, setLatestVisitor] = useState<LatestVisitor[]>([])
-  // console.log(session)
 
   // get user
   useEffect(() => {
@@ -71,8 +70,107 @@ const HomePage: NextPage = () => {
         setUser(res.data)
       }
     }).catch(err => console.log(err))
+
+    // get total profile views
+    get(child(ref(database), `users/${username}/totalViews`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        setTotalViews(snapshot.val()+1);
+        set(ref(database, 'users/' + username + '/totalViews'),
+          snapshot.val()+1
+        );
+      } else {
+        set(ref(database, 'users/' + username + '/totalViews'),
+          1
+        );
+        setTotalViews(1)
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    // cek user yang visit udah login atau belum
+    // user yang divisit sama atau tidak dengan yang login
+    // kalau belum login: skip
+    // kalau sama: skip
+    // perlu link dan didapat dari username yang sedang login
+    // simpan username orang yang visit di database
+    // lastVisitors dalam array berisi orang-orang yang visit profil dan sudah login
+
   }, [username])
 
+  // get 3 latest visitors
+  useEffect(() => {
+    if (session){
+      if (session?.login !== username){
+        get(child(ref(database), `users/${username}/lastVisitors`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            const tempVisitors = snapshot.val();
+            if (tempVisitors.includes(session?.login)){
+              tempVisitors.splice(tempVisitors.indexOf(session?.login), 1);
+            }
+            if (tempVisitors.length >= 3){
+              tempVisitors.pop();
+            }
+            tempVisitors.unshift(session?.login)
+            set(ref(database, 'users/' + username + '/lastVisitors'),
+              tempVisitors
+            );
+            const arr = tempVisitors.map(async (visitor: any) => {
+              const res = await axios.get(`https://api.github.com/users/${visitor}`, {
+                headers: {
+                  'X-GitHub-Api-Version': '2022-11-28',
+                }
+              });
+              return {login: visitor, avatar_url: res?.data?.avatar_url};
+            })
+            // console.log(arr)
+            Promise.all(arr).then(results => {
+              // results is the mapped array
+              setLatestVisitor(results);
+            });
+          } else {
+            set(ref(database, 'users/' + username + '/lastVisitors'),
+              [session?.login]
+            );
+            axios.get(`https://api.github.com/users/${session?.login}`, {
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28',
+              }
+            }).then(res => {
+              setLatestVisitor([{login: session?.login, avatar_url: res?.data?.avatar_url}]);
+            })
+
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+      }
+    }else{
+      get(child(ref(database), `users/${username}/lastVisitors`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          const tempVisitors = snapshot.val();
+          const arr = tempVisitors.map(async (visitor: any) => {
+            const res = await axios.get(`https://api.github.com/users/${visitor}`, {
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28',
+              }
+            });
+            return {login: visitor, avatar_url: res?.data?.avatar_url};
+          })
+          // console.log(arr)
+          Promise.all(arr).then(results => {
+            // results is the mapped array
+            setLatestVisitor(results);
+          });
+        } else {
+          // do nothing
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+  }, [session])
+  
   // getRepos
   useEffect(() => {
     if (!username) return;
@@ -88,22 +186,20 @@ const HomePage: NextPage = () => {
     }).catch(err => console.log(err))
   }, [username])
 
-  // get latest visitors
-  useEffect(() => {
-    if (!username) return;
-    axios.get(`https://api.github.com/users/${username}/received_events`, {
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28',
-      }
-    })
-    .then(res => {
-      if (res.status === 200){
-        setLatestVisitor(res?.data?.slice(0,3))
-      }
-    }).catch(err => console.log(err))
-  }, [username])
-
-  console.log(latestVisitor)
+  // // get latest visitors
+  // useEffect(() => {
+  //   if (!username) return;
+  //   axios.get(`https://api.github.com/users/${username}/received_events`, {
+  //     headers: {
+  //       'X-GitHub-Api-Version': '2022-11-28',
+  //     }
+  //   })
+  //   .then(res => {
+  //     if (res.status === 200){
+  //       setLatestVisitor(res?.data?.slice(0,3))
+  //     }
+  //   }).catch(err => console.log(err))
+  // }, [username])
 
   function timeAgo(date: string){
     const newDate = new Date(date);
@@ -208,7 +304,7 @@ const HomePage: NextPage = () => {
               View profile
             </DropdownItem>
             <Divider />
-            <DropdownItem>
+            <DropdownItem onClick={handleLogout}>
               Log out
             </DropdownItem>
           </DropdownItems>
@@ -310,7 +406,7 @@ const HomePage: NextPage = () => {
                   }
                   <AboutVisitorCount>
                     <Image src="/people.png" alt="people" width="20" height="20"/>
-                    <AboutText><b>{totalVisitor}</b> profile visitor</AboutText> 
+                    <AboutText><b>{totalViews}</b> profile visitor</AboutText> 
                   </AboutVisitorCount>
                 </AboutInfo>
               </AboutDesc>
@@ -322,13 +418,13 @@ const HomePage: NextPage = () => {
                 Latest Visitor
               </Heading>
               <AvatarGroup>
-                {latestVisitor?.map(visitor => {
+                {latestVisitor.length > 0 ? latestVisitor?.map(visitor => {
                   return (
-                    <Link key={visitor?.actor?.id} href={`/${visitor?.actor?.login}`}>
-                      <Image src={visitor?.actor?.avatar_url} alt="people" width="56" height="56" style={imageStyle}/>
+                    <Link key={visitor?.login} href={`/${visitor?.login}`}>
+                      <Image src={visitor?.avatar_url} alt="people" width="56" height="56" style={imageStyle}/>
                     </Link>
                   )
-                })}
+                }) : <p>No visitors</p>}
               </AvatarGroup>
             </Visitors>
           </VisitorSection>

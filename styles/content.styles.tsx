@@ -64,6 +64,10 @@ export const SectionTitle = styled.p`
   line-height: 32px;
   letter-spacing: 0em;
   text-align: center;
+
+  @media (max-width: 576px){
+    text-align: left
+  }
 `
 export const Username = styled.p`
   font-size: 16px;
@@ -71,6 +75,10 @@ export const Username = styled.p`
   line-height: 24px;
   letter-spacing: 0em;
   text-align: center;
+
+  @media (max-width: 576px){
+    text-align: left
+  }
 `
 export const About = styled.div`
   display: flex;

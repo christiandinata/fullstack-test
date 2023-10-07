@@ -37,9 +37,9 @@ The frontend design for this app can be found in [this Figma file](https://www.f
 
 These tasks are optional but we would encourage you to give them a try to demonstrate more of your skills
 
-- [ ] Setup Github Actions workflow file for lint check on PRs to `master`
-- [ ] Setup Github Actions workflow file to deploy on pushes to `master`
-- [ ] Deploy the website and submit the URL to us
+- [v] Setup Github Actions workflow file for lint check on PRs to `master`
+- [v] Setup Github Actions workflow file to deploy on pushes to `master`
+- [v] Deploy the website and submit the URL to us
 
 ## Tips
 

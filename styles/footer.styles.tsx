@@ -26,5 +26,5 @@ export const FooterContent = styled.p`
   font-weight: 400;
   line-height: 24px;
   letter-spacing: 0em;
-  text-align: left;
+  text-align: center;
 `

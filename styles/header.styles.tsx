@@ -239,6 +239,7 @@ export const DropdownItem = styled.div`
   line-height: 20px;
   letter-spacing: 0em;
   text-align: left;
+  cursor: pointer;
 `
 
 export const Divider = styled.div`
